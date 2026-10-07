@@ -23,6 +23,7 @@
 - [Estrutura de pastas](#-estrutura-de-pastas)
 - [Como executar](#-como-executar)
 - [Uso da API](#-uso-da-api)
+- [Créditos](#-créditos)
 - [Autor](#-autor)
 
 ---
@@ -206,6 +207,13 @@ curl -X POST http://localhost:8080/qrcode \
 **Response — `500 Internal Server Error`**
 
 Retornado quando ocorre falha na geração do QR Code ou no upload para o S3.
+
+## 🙏 Créditos
+
+Este projeto foi desenvolvido pelo tutorial da **[Fernanda Kipper](https://www.youtube.com/@kipperdev)**, que ensina passo a passo a construir essa API com Spring Boot, AWS S3 e Docker.
+
+
+[![YouTube](https://img.shields.io/badge/Assista_o_vídeo-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=71WGVa79BWE)
 
 ## 👨‍💻 Autor
 
