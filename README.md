@@ -127,6 +127,59 @@ qrcode-generator/
 - Um usuário IAM com permissão `s3:PutObject` no bucket (Access Key + Secret Key)
 - **Docker** instalado (ou Java 21 + Maven para rodar localmente)
 
+### ☁️ Configurando a AWS
+
+#### 1. Criar o bucket S3
+
+No console da AWS, acesse **S3 → Create bucket**, escolha um nome e anote a **região** (ex: `us-east-2`). Esses dois valores vão para o `.env`.
+
+#### 2. Criar o usuário IAM e as credenciais
+
+Acesse **IAM → Users → Create user** (ex: `qrcode-generator`). Depois, na aba **Security credentials**, clique em **Create access key** e guarde a *Access Key* e a *Secret Key*.
+
+#### 3. Dar permissão de upload ao usuário
+
+Sem esta etapa a API retorna `500` e o log mostra `not authorized to perform: s3:PutObject`.
+
+Em **IAM → Users → `seu-usuario` → Permissions → Add permissions → Create inline policy**, use o editor **JSON**:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "s3:PutObject",
+      "Resource": "arn:aws:s3:::nome-do-seu-bucket/*"
+    }
+  ]
+}
+```
+
+> 🔒 Essa policy segue o **princípio do menor privilégio**: o usuário só pode *enviar* arquivos para esse bucket, e nada mais.
+>
+> ⚠️ Confira se a policy aparece na aba **Permissions** do usuário. Uma policy criada em **IAM → Policies** só vale depois de ser anexada (*attach*) ao usuário.
+
+#### 4. (Opcional) Deixar os QR Codes públicos
+
+Para que a URL retornada abra no navegador, desative o **Block all public access** do bucket e adicione em **Permissions → Bucket policy**:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::nome-do-seu-bucket/*"
+    }
+  ]
+}
+```
+
+Assim qualquer pessoa com o link pode **visualizar** a imagem, mas não enviar nem apagar arquivos.
+
 ### Variáveis de ambiente
 
 | Variável | Descrição | Exemplo |
@@ -153,12 +206,14 @@ O `Dockerfile` utiliza **multi-stage build**:
 - **Stage 2 (runtime):** imagem enxuta `eclipse-temurin:21-jre-alpine` contendo apenas o JRE e o `.jar` final.
 
 ```bash
-# 1. Build da imagem
-docker build -t qrcode-generator .
+# 1. Build da imagem (a tag após ":" define a versão)
+docker build -t qrcode-generator:4.0 .
 
-# 2. Executar o container passando as variáveis de ambiente
-docker run -p 8080:8080 --env-file .env qrcode-generator
+# 2. Executar o container passando as variáveis de ambiente do .env
+docker run --env-file .env -p 8080:8080 qrcode-generator:4.0
 ```
+
+> 💡 Alterou o código Java ou o `Dockerfile`? Rode o `docker build` novamente. Alterou apenas o `.env`? Basta parar o container e executar o `docker run` de novo.
 
 ### ☕ Rodando localmente (sem Docker)
 
