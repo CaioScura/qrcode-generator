@@ -32,7 +32,7 @@ public class QrCodeController {
             return ResponseEntity.ok(response);
 
         }catch (Exception e){
-//            System.out.println(e);
+            System.out.println(e);
             return ResponseEntity.internalServerError().build();
         }
 

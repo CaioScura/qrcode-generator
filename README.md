@@ -133,7 +133,7 @@ qrcode-generator/
 |---|---|---|
 | `AWS_ACCESS_KEY_ID` | Access key do usuário IAM | `AKIA...` |
 | `AWS_SECRET_ACCESS_KEY` | Secret key do usuário IAM | `********` |
-| `AWS_REGION` | Região do bucket | `us-east-1` |
+| `AWS_REGION` | Região do bucket | `us-east-2` |
 | `AWS_BUCKET_NAME` | Nome do bucket S3 | `qrcode-generator-name` |
 
 Crie um arquivo `.env` na raiz do projeto (ele já está no `.gitignore`):
@@ -141,7 +141,7 @@ Crie um arquivo `.env` na raiz do projeto (ele já está no `.gitignore`):
 ```env
 AWS_ACCESS_KEY_ID=sua-access-key
 AWS_SECRET_ACCESS_KEY=sua-secret-key
-AWS_REGION=us-east-1
+AWS_REGION=us-east-2
 AWS_BUCKET_NAME=nome-do-seu-bucket
 ```
 
@@ -200,7 +200,7 @@ curl -X POST http://localhost:8080/qrcode \
 
 ```json
 {
-  "url": "https://nome-do-seu-bucket.s3.us-east-1.amazonaws.com/3f1c2a9e-7b4d-4c8e-9a1f-2d6e5b8c0a7f"
+  "url": "https://nome-do-seu-bucket.s3.us-east-2.amazonaws.com/3f1c2a9e-7b4d-4c8e-9a1f-2d6e5b8c0a7f"
 }
 ```
 
